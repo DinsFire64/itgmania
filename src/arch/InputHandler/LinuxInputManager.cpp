@@ -21,8 +21,6 @@
 
 #include <errno.h>
 
-Preference<bool> g_bInputLinuxOrderByLocation( "InputLinuxOrderByLocation", false );
-
 RString getDevice(RString inputDir, RString type)
 {
 	RString result = "";
@@ -86,18 +84,9 @@ LinuxInputManager::LinuxInputManager()
 			LOG->Info("LinuxInputManager: %s seems to have no eventNN or jsNN.", dName.c_str() );
 	}
 
-	if(g_bInputLinuxOrderByLocation)
-	{
-		// use Presort to sort the devices by unique location (like USB port/hub number.)
-		PresortPhysical(m_vsPendingEventDevices, "event");
-		PresortPhysical(m_vsPendingJoystickDevices, "js");
-	}
-	else
-	{
-		// Sort devices for more consistent numbering.
-		std::sort(m_vsPendingEventDevices.begin(), m_vsPendingEventDevices.end(), cmpDevices);
-		std::sort(m_vsPendingJoystickDevices.begin(), m_vsPendingJoystickDevices.end(), cmpDevices);
-	}
+	// use Presort to sort the devices by unique location (like USB port/hub number.)
+	PresortPhysical(m_vsPendingEventDevices, "event");
+	PresortPhysical(m_vsPendingJoystickDevices, "js");
 
 	closedir(sysClassInput);
 }
